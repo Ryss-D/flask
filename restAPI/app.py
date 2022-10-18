@@ -51,7 +51,7 @@ def create_item(name):
             return new_item, 201
     return {"message": "Store not found"}, 404
 
-@app.get("/store/<string:name>/item")
+@app.get("/store/<string:name>")
 def get_store(name):
     for store in stores:
         if store["name"] == name:
