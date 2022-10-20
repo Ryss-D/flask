@@ -9,3 +9,8 @@
 ##from comand line we can run imagest (to container) with docker run -p 5005:5000 name
 ## we also can run -d to run it on bkacgroudn a a deamon   docker run -d -p 5005:5000 name
 ##5005:5000 means taht we ar fowarding the incommming request from 5005 local port to 5000 container port
+##UUIDs Universally Unique IDentifiers
+##requirementes.txt is like a pubspec.taml we list the packages we need
+##.flaskenv there we charge the env variables for the excecition
+##Python-dotenv package inteacts and auto load files .env or .flaskenv
+##to install packages from requirement.txt pip install -r requiermentes.txt -r for recursive
