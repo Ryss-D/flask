@@ -1,6 +1,8 @@
 from http.client import REQUEST_HEADER_FIELDS_TOO_LARGE
 from flask import Flask, request
 #file name and variable name should always be app
+from flask_smorest import abort
+
 app = Flask(__name__)
 
 stores = [
