@@ -3,6 +3,7 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from db import stores
+from schemas import StoreSchme
 
 ## The main aidea behjind blue print in smoret
 ## is divide an api into multiple segments
@@ -22,3 +23,22 @@ class Store(MethodView):
             return {"message":"Store deleted."}
         except KeyError:
             abort(404, message="Store not found.")
+
+    
+@blp.route("/store")
+class StoreList(MethodView):
+    def get(self):
+        return {"stores": list(stores.values)}
+
+    @blp.arguments(StoreSchme)
+    def post(self, store_data):
+        for store in stores.values():
+            if store_data["name"] == store["name"]:
+                abort(400, message=f"Store already exists")
+
+        store_id = uuid.uuid4().hex
+        store = {**store_data, "id": store_id}
+        stores[store_id] = store
+
+        return store
+
