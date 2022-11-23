@@ -10,6 +10,10 @@ blp = Blueprint("Items", __name__, description="Operation on items")
 
 @blp.route("/item/<string:item_id>")
 class Item(MethodView):
+    ## this is the default code of response
+    ##and will pass whatever be the return
+    ##to ItemSchmea
+    @blp.response(200, ItemSchema)
     def get(self, item_id):
         try:
             return items[item_id]
@@ -23,6 +27,8 @@ class Item(MethodView):
             abort(404, message="Item not found.")
     
     @blp.arguments(ItemUpdateSchema)
+    ##orden of decorator matter
+    @blp.response(200, ItemSchema)
     def put(self,item_data, item_id ):
         #item_data = request.get_json() 
         if "price" not in item_data or "name" not in item_data:
@@ -38,14 +44,18 @@ class Item(MethodView):
 
     @blp.route("/item")
     class ItemList(MethodView):
+        ##with many=True it auto convert response into a list
+        @blp.response(200, ItemSchema(many=True))
         def get(self):
-            return {"items": list(items.values())}
+            #return {"items": list(items.values())}
+            return items.values()
 
         ##with this we pass to validation
         ##with marshmallow
         @blp.arguments(ItemSchema)
         ## here the second argument is the json
         ##that pass the validation
+        @blp.response(201, ItemSchema)
         def post(self, store_data):
             ##store_data= request.get_json()
 
