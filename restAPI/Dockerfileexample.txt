@@ -6,3 +6,10 @@ RUN pip install flask
 COPY . .
 CMD ["flask", "run", "--host", "0.0.0.0"]
 ##on  areal docker file we have to deltate de .txt
+##we ru it with docker run -dp 5000:5000 flask-stores-api(name of app)
+
+##we could run the app with
+##docker run -dp 5000:5000 -w /app -v"$(pwd):/app" flask-stores-api K(name of app)
+##this will change the working dir that we 
+##define as /app to the current folder allowing
+##hot reload creating a volume

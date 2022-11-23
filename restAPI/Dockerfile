@@ -3,8 +3,10 @@ FROM python:3.10
 EXPOSE 5000
 ##port to run the flask app
 WORKDIR /app
+COPY requirements.txt .
 ##Then we copy the app.py on the image stora to be abble to use it on the /app directory
-RUN pip install flask
+RUN pip install -r requirements.txt
+##RUN pip install flask
 COPY . .
 #here we ar coping from our file system to images file system
 # we are coping all . to current folder. that o this case are /app
