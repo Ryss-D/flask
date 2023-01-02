@@ -2,8 +2,10 @@ import uuid
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from sqlalchemy.exc import SQLAlchemyError
 
-from db import items, stores
+from db import db
+from models import  ItemModel
 from schemas import ItemSchema, ItemUpdateSchema
 
 blp = Blueprint("Items", __name__, description="Operation on items")
@@ -56,19 +58,18 @@ class Item(MethodView):
         ## here the second argument is the json
         ##that pass the validation
         @blp.response(201, ItemSchema)
-        def post(self, store_data):
-            ##store_data= request.get_json()
+        def post(self, item_data):
+            ##** allow us to unpack all arguments paxsed as named arguments
+            item = ItemModel(**item_data)
+            ##when we create a item id field will hav eno value
+            ##until we insert it on db
 
-            for store in stores.values():
-                if store_data["name"] == store["name"]:
-            ## 400 bad request, 404 not found
-                    abort(400, message=f"{store['name']} already exists")
-            store_id = uuid.uuid4().hex
-            new_store = {
-            **store_data, "id": store_id
-            ##**store_data wiil unpack store_data dicotrionary values into de new one
-            }
-            stores[store_id] = new_store
-    ##On response codes 200 represents everything ok
-    ##and with 201 code it means evetything ok, i accept your data
-            return new_store, 201
+            try:
+                ##add dont writte direct into de db but stage data
+                db.session.add(item)
+                ##commit writte in db
+                db.session.commit()
+            except SQLAlchemyError:
+                abort(500, message= "An error ocurred while inseting the item.")
+            
+            return item
