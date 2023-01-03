@@ -17,32 +17,21 @@ class Item(MethodView):
     ##to ItemSchmea
     @blp.response(200, ItemSchema)
     def get(self, item_id):
-        try:
-            return items[item_id]
-        except KeyError:
-            abort(404, message="Item not found.")
+        ##this i only avaliable with flask sqlarchemy, with vanilla alchemy we will have to find other way
+        ##get or 404 use the primary key to search
+        item = ItemModel.query.get_or_404(item_id)
+        return item
 
     def delete(self, item_id):
-        try:
-            del items[item_id]
-        except KeyError:
-            abort(404, message="Item not found.")
+        item = ItemModel.query.get_or_404(item_id)
+        raise NotImplementedError("Deleting an item is not implemented.")
     
     @blp.arguments(ItemUpdateSchema)
     ##orden of decorator matter
     @blp.response(200, ItemSchema)
     def put(self,item_data, item_id ):
-        #item_data = request.get_json() 
-        if "price" not in item_data or "name" not in item_data:
-            abort(400, message="Bad request, Ensure 'price', and 'name' are included in the JSON payload.")
-
-        try:
-            item = items[item_id]
-        #|= is a operator that allow us to modificate the value of the 
-        #dictionary in place
-            item |= item_data
-        except KeyError:
-         abort(404, message="Item not found.")
+        item = ItemModel.query.get_or_404(item_id)
+        raise NotImplementedError("Updating an item is not implemented.")
 
     @blp.route("/item")
     class ItemList(MethodView):
