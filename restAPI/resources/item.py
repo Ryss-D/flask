@@ -29,8 +29,20 @@ class Item(MethodView):
     @blp.arguments(ItemUpdateSchema)
     ##orden of decorator matter
     @blp.response(200, ItemSchema)
+    ##put request should have the same state at the end independly if we receive one o ten time the request
+    ##ieg if a user push multiple times a button of send by mistake two times the same request
     def put(self,item_data, item_id ):
-        item = ItemModel.query.get_or_404(item_id)
+        item = ItemModel.query.get(item_id)
+        ## item will be true if item exists 
+        if item:
+            item.price = item_data["price"]
+            item.name = item_data["name"]
+        else:
+            item = ItemModel(id=item_id, **item_data)
+
+        db.session.add(item)
+        db.session.commit()
+
         raise NotImplementedError("Updating an item is not implemented.")
 
     @blp.route("/item")
