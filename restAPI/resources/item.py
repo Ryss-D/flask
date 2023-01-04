@@ -24,7 +24,9 @@ class Item(MethodView):
 
     def delete(self, item_id):
         item = ItemModel.query.get_or_404(item_id)
-        raise NotImplementedError("Deleting an item is not implemented.")
+        db.session.delete(item)
+        db.session.commit()
+        return {"message":"Item has been delted"}, 200
     
     @blp.arguments(ItemUpdateSchema)
     ##orden of decorator matter
@@ -50,8 +52,7 @@ class Item(MethodView):
         ##with many=True it auto convert response into a list
         @blp.response(200, ItemSchema(many=True))
         def get(self):
-            #return {"items": list(items.values())}
-            return items.values()
+            return ItemModel.query.all()
 
         ##with this we pass to validation
         ##with marshmallow
