@@ -5,7 +5,7 @@ class PlainItemSchema(Schema):
     ##be returned and cant be passed
     ##by default is false
     ##ieg load_only is the oposite alternative
-    id = fields.Str(dump_only=True)
+    id = fields.Int(dump_only=True)
     name = fields.Str(dump_only=False, required=True)
     price= fields.Float(required=True)
 
@@ -15,8 +15,13 @@ class ItemUpdateSchema(Schema):
     store_id = fields.Int()
 
 class PlainStoreSchema(Schema):
-    id = fields.Str(dump_only=True)
+    id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
+
+class PlainTagScheme(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True)
+
 
 
 class ItemSchema(PlainItemSchema):
@@ -25,3 +30,8 @@ class ItemSchema(PlainItemSchema):
 
 class StoreSchema(PlainStoreSchema):
     items = fields.List(fields.Nested(PlainItemSchema()), dump_only=True)
+    tag = fields.List(fields.Nested(PlainTagScheme()), dump_only=True)
+
+class TagSchema(PlainTagScheme):
+    store_id = fields.Int(load_only=True)
+    stores = fields.List(fields.Nested(PlainStoreSchema()), dump_only=True)

@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from models import StoreModel
-from schemas import StoreSchme
+from schemas import StoreSchema
 
 ## The main aidea behjind blue print in smoret
 ## is divide an api into multiple segments
@@ -14,7 +14,7 @@ blp = Blueprint("stores", __name__, description="Operations on stores")
 
 @blp.route("/store/<string:store_id>")
 class Store(MethodView):
-    @blp.response(200, StoreSchme)
+    @blp.response(200, StoreSchema)
     def get(self, store_id):
         store = StoreModel.get_or_404(store_id)
         return store
@@ -30,12 +30,12 @@ class Store(MethodView):
     
 @blp.route("/store")
 class StoreList(MethodView):
-    @blp.response(200, StoreSchme(many=True))
+    @blp.response(200, StoreSchema(many=True))
     def get(self):
         return StoreModel.query.all()
 
-    @blp.arguments(StoreSchme)
-    @blp.response(201, StoreSchme)
+    @blp.arguments(StoreSchema)
+    @blp.response(201, StoreSchema)
     def post(self, store_data):
             ##** allow us to unpack all arguments paxsed as named arguments
         store = StoreModel(**store_data)
