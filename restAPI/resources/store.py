@@ -7,13 +7,14 @@ from db import db
 from models import StoreModel
 from schemas import StoreSchema
 
-## The main aidea behjind blue print in smoret
+## The main idea behind blue print in smorest
 ## is divide an api into multiple segments
 
 blp = Blueprint("stores", __name__, description="Operations on stores")
 
 @blp.route("/store/<string:store_id>")
 class Store(MethodView):
+    ##MethodView is a class within the flask.views module of the Flask project. MethodView is a Python Metaclass that determines the methods, such as GET, POST, PUT, etc, that a view defines.
     @blp.response(200, StoreSchema)
     def get(self, store_id):
         store = StoreModel.get_or_404(store_id)

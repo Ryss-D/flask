@@ -29,6 +29,8 @@ class Item(MethodView):
         return {"message":"Item has been delted"}, 200
     
     @blp.arguments(ItemUpdateSchema)
+    ##To inject arguments into a view function, use the Blueprint.arguments decorator. It allows to specify a Schema to deserialize and validate the parameters.
+##When processing a request, the input data is deserialized, validated, and injected in the view function.
     ##orden of decorator matter
     @blp.response(200, ItemSchema)
     ##put request should have the same state at the end independly if we receive one o ten time the request
