@@ -13,4 +13,5 @@ class ItemModel(db.Model):
     ##backpuulates means taht sotremodel class will also has a item realtion
     ##then will be easy to see the items related with a store
     store = db.relationship("StoreModel", back_populates="items") 
+    tags = db.relationship("TagModel", back_populates="items", secondary="items_tags")
 
