@@ -9,7 +9,10 @@ from models import  ItemModel
 from schemas import ItemSchema, ItemUpdateSchema
 
 blp = Blueprint("Items", __name__, description="Operation on items")
-
+##blue prinrt recives positional and named argments
+#the two positional refer to de name of the blue print and the import name of the argument
+##name (str) – The name of the blueprint. Will be prepended to each endpoint name.
+##import_name (str) – The name of the blueprint package, usually __name__. This helps locate the root_path for the blueprint.
 @blp.route("/item/<string:item_id>")
 class Item(MethodView):
     ## this is the default code of response
