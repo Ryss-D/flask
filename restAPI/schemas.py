@@ -42,3 +42,9 @@ class TagAndItemSchema(Schema):
     message= fields.Str()
     item = fields.Nested(ItemSchema)
     tag = fields.Nested(TagSchema)
+
+class UserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+    ## load_only = True menas that password is only recived and never sended to the client
+    password = fields.Str(required=True, load_only=True)
