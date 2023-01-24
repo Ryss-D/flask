@@ -1,7 +1,7 @@
-import uuid
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
@@ -18,6 +18,7 @@ class Item(MethodView):
     ## this is the default code of response
     ##and will pass whatever be the return
     ##to ItemSchmea
+    @jwt_required()
     @blp.response(200, ItemSchema)
     def get(self, item_id):
         ##this i only avaliable with flask sqlarchemy, with vanilla alchemy we will have to find other way
@@ -25,12 +26,19 @@ class Item(MethodView):
         item = ItemModel.query.get_or_404(item_id)
         return item
 
+    @jwt_required()
     def delete(self, item_id):
         item = ItemModel.query.get_or_404(item_id)
         db.session.delete(item)
         db.session.commit()
         return {"message":"Item has been delted"}, 200
     
+    @jwt_required()
+    ## this is all the implementation needed to 
+    ##implement security via jwt to a spcifid endpoint
+    ## as defaul on header must go 
+    ## Autorization Bearer $JWT
+    ##Bearer is like a convention
     @blp.arguments(ItemUpdateSchema)
     ##To inject arguments into a view function, use the Blueprint.arguments decorator. It allows to specify a Schema to deserialize and validate the parameters.
 ##When processing a request, the input data is deserialized, validated, and injected in the view function.
