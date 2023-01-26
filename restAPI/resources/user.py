@@ -16,7 +16,7 @@ class UserRegister(MethodView):
     ##allow us to process the data passed with the schema
     @blp.arguments(UserSchema)
     def post(self, user_data):
-        if UserModel.query.filter(UserModel.username = user_data["username"]).first():
+        if UserModel.query.filter(UserModel.username == user_data["username"]).first():
             abort(409, message="A user with tat username already exists.")
         user = UserModel(
             username = user_data["username"],
@@ -32,7 +32,7 @@ class UserRegister(MethodView):
 @blp.route("/login")
 class UserLogin(MethodView):
     @blp.arguments(UserSchema)
-    def post(self, user_data);
+    def post(self, user_data):
         user = UserModel.query.filter(
             UserModel.username == user_data["username"]
         ).first()

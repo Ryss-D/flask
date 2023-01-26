@@ -1,7 +1,7 @@
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
@@ -28,6 +28,9 @@ class Item(MethodView):
 
     @jwt_required()
     def delete(self, item_id):
+        jwt = get_jwt()
+        if not jwt.get("is_admin"):
+            abort(401, message= "Admin privilege required")
         item = ItemModel.query.get_or_404(item_id)
         db.session.delete(item)
         db.session.commit()
@@ -38,6 +41,7 @@ class Item(MethodView):
     ##implement security via jwt to a spcifid endpoint
     ## as defaul on header must go 
     ## Autorization Bearer $JWT
+    ##Bearer means "Portador"
     ##Bearer is like a convention
     @blp.arguments(ItemUpdateSchema)
     ##To inject arguments into a view function, use the Blueprint.arguments decorator. It allows to specify a Schema to deserialize and validate the parameters.
