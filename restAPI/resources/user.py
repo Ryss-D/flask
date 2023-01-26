@@ -2,8 +2,9 @@ from flask_views import MethodView
 from flask_smorest import Blueprint, abort
 from passlib_hash import pbkdf2_sha256
 ## pass lib will allow us to hash passwords
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 
+from blocklist import BLOCKLIST
 from db import db
 from models import UserModel
 from schemas import UserSchema
@@ -46,6 +47,14 @@ class UserLogin(MethodView):
             ##ensuring that this token in only valid for the user who creates it 
             return {"access_token": access_token}
         abort(401, message="Invaid credentials.")
+
+@blp.route("/logout")
+class UserLogOut(MethodView):
+    @jwt_required()
+    def post(self):
+        jti = get_jwt()["jti"]
+        BLOCKLIST.add(jti)
+        return {"message": "Succesfully logged out."}
 
 
 
