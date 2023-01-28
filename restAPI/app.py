@@ -4,6 +4,8 @@ from flask import Flask, request, jsonify
 from flask_smorest import Api
 ## package for json web token autentiction management
 from flask_jwt_extended import JWTManager
+##is the conection beween flask and alembic
+from flask_migrate import Migrate
 
 from db import db
 ##its the same that use import.__init__
@@ -37,6 +39,8 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
+    ##migrate is an alternative to  operate db 
+    migrate = Migrate(app, db)
 
     api = Api(app)
 
