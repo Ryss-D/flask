@@ -68,6 +68,20 @@ def create_app(db_url=None):
             )
         )
 
+    @jwt.need_fresh_token_loader
+    def token_not_fresh_callback(jwt_header, jwt_payload):
+        return (
+            jsonify(
+                {
+                    "description": "The token is not fresh",
+                    "error": "fresh_token_required"
+                }
+            ),
+            401,
+        )
+
+    ##how to controll the refresh time of jwts
+
    ##JWT claims allowus to pass extra information other tan the user identification 
     @jwt.additional_claims_loader
     def add_claims_to_jwt(identity):

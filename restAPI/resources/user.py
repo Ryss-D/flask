@@ -2,7 +2,7 @@ from flask_views import MethodView
 from flask_smorest import Blueprint, abort
 from passlib_hash import pbkdf2_sha256
 ## pass lib will allow us to hash passwords
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt
 
 from blocklist import BLOCKLIST
 from db import db
@@ -42,10 +42,11 @@ class UserLogin(MethodView):
             ##with verify we are not unhashing the passwrod we are
             ##just verifying that the passed password hashed is equal to the 
             ##hash stored
-            access_token = create_access_token(idendity=user.id)
+            access_token = create_access_token(idendity=user.id, fresh=True)
             ## we are storing user id in the jwt
             ##ensuring that this token in only valid for the user who creates it 
-            return {"access_token": access_token}
+            refresh_token = create_refresh_token(identity=user.id)
+            return {"access_token": access_token, "refresh_token":refresh_token,}
         abort(401, message="Invaid credentials.")
 
 @blp.route("/logout")
@@ -56,8 +57,20 @@ class UserLogOut(MethodView):
         BLOCKLIST.add(jti)
         return {"message": "Succesfully logged out."}
 
-
-
+@blp.route("/refresh")
+class TokenRefresh(MethodView):
+    @jwt_required(refresh=True)
+    def post(self):
+        current_user = get_jwt_identity()
+        new_token = create_access_token(identity=current_user, fresh=False)
+        ##
+        ##this block of code make that refresh token
+        ##be usable just for one time, then it will pray for re login
+        ##because of user identity now is in block list
+        jti = get_jwt()["jti"]
+        BLOCKLIST.add(jti)
+        ##
+        return {"acces_token": new_token}
 
 
 @blp.route("/user/<int:user_id>")

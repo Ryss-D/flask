@@ -71,6 +71,9 @@ class Item(MethodView):
         def get(self):
             return ItemModel.query.all()
 
+        ##this will require a jwt of type fresh to perform the operation
+        @jwt_required(fresh=True)
+
         ##with this we pass to validation
         ##with marshmallow
         @blp.arguments(ItemSchema)
