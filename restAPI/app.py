@@ -7,6 +7,9 @@ from flask_jwt_extended import JWTManager
 ##is the conection beween flask and alembic
 from flask_migrate import Migrate
 
+##with migrate and alembic we will have a historial of db and his modifications
+##also will helpups with the changes of the db and launching of the app
+
 from db import db
 ##its the same that use import.__init__
 import models
