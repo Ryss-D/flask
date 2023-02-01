@@ -41,6 +41,10 @@ def create_app(db_url=None):
     db.init_app(app)
     ##migrate is an alternative to  operate db 
     migrate = Migrate(app, db)
+    ##we can iniiate the data base running in terminal flask db init
+    ##first migration will be runent with the old db empty or deletted and running glask db migrate
+    ## and tu apply de cnahges we must run flask db upgrade
+
 
     api = Api(app)
 
@@ -72,7 +76,7 @@ def create_app(db_url=None):
             )
         )
 
-    @jwt.need_fresh_token_loader
+    @jwt.needs_fresh_token_loader
     def token_not_fresh_callback(jwt_header, jwt_payload):
         return (
             jsonify(

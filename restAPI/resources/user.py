@@ -1,6 +1,7 @@
-from flask_views import MethodView
+from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from passlib_hash import pbkdf2_sha256
+##from passlib_hash import pbkdf2_sha256
+from passlib.hash import pbkdf2_sha256
 ## pass lib will allow us to hash passwords
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt
 
